@@ -1,0 +1,75 @@
+1、vs："gl_Position = ftransform();"
+	使用该语句，是对顶点做矩阵变换处理。（gl_Position）是shader中的内置变量；（ftransform()）是内置函数。
+
+2、ps："gl_FragColor = vec4(1,0,0,1);"
+	使用该语句，是对图像进行着色处理。（gl_FragColor）是shader中的内置输出颜色的成员变量，（vec4(1,0,0,1)）表示拥有四个float（0~1）变化的变量。
+
+3、_colorLoc = glGetUniformLocation ( _programId, "_color" );
+	使用（glGetUniformLocation）是用来获取（uniform）变量的位置<句柄>。
+
+4、varying关键字：作用是从顶点shader到片元shader之间变量传递。
+	注意：在传递过程中变量的类型和名称必须保持一致。
+	例如：
+		vs："varying    float   v_lifetime;"
+		ps："varying    float   v_lifetime;"
+
+5、vs中的函数使用次数 = 绘制三角形的个数 * 2；
+
+6、每个顶点可使用两组颜色：例如：
+    vs：定义：
+	"varying    vec4   outColor0;"
+	"varying    vec4   outColor1;"
+	初始化：
+	"outColor0 = gl_Color；"
+	"outColor1 = gl_SecondaryColor；"
+    ps：使用
+	"varying    vec4   outColor0;"
+	"varying    vec4   outColor1;"
+	"gl_FragColor = outColor0 + outColor1;"
+
+7、纹理：
+	"uniform    sampler2D   _texture;"
+	只能在ps（片元）shader中使用。
+
+8、法线：
+   --1、面法线：法线一定是三个坐标，法线垂直于面，但是两个面使用法线过度生硬。
+   --2、点法线：法线一定是三个坐标，一个点被两个面共有，过度平滑，使用更多。
+	法线使能函数：（glEnableClientState）法线矩阵可以用来写入以及调用glDrawArrays方法或者glDrawElements方法时进行渲染。
+	     glEnableClientState（GL_NORMAL_ARRAY）；
+	法线使用函数：（glNormalPointer）传递给顶点shader
+	     glNormalPointer（GL_FLOAT,sizeof(Vertex）,&rect[0].nx);
+	在vs中使用法线数据：
+	    "outColor0 = vec4(gl_Normal,1)；"  此时把法线变量当做颜色使用
+
+9、shader中的内置变量：
+	vec4 	gl_Position;	顶点位置
+	float	gl_PointSize;	点大小
+	vec4	gl_ClipVertex;
+   ps中独有的内置变量：
+	vec4	gl_FragCoord;	雾化
+	bool	gl_FrontFacing;	面
+	vec4	gl_FragColor;	颜色
+	vec4	gl_FragData[gl_MaxDrawBuffers];	多个缓冲区会用到
+	float	gl_FragDepth;	深度
+
+10、attribute关键字：
+	启用attribute类型数据：
+	_lifetimeLoc = glGetAttribLocation ( _programId, "_lifetime" );
+	给attribute类型数据传递：
+	glVertexAttribPointer ( _shader._lifetimeLoc, 1, GL_FLOAT,   GL_FALSE, PARTICLE_SIZE * sizeof(GLfloat), _particleData );
+
+11、in\out关键字：
+	vs：
+	   "in 	vec3	_position;"
+	   "in 	vec4	_color;"
+	   "out vec4	_outColor;"
+	
+
+
+
+
+
+
+
+
+
